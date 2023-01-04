@@ -1,0 +1,51 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: execute-script-template
+  annotations:
+    workflows.argoproj.io/description: |
+      This workflow template provides an general template for running a script and is capable of artifact passing.
+spec:
+  entrypoint: execute-script
+  templates:
+  - name: execute-script
+    inputs:
+      parameters:
+      - name: script-args
+        default: "sleep 1; mkdir /tmp/output; cowsay primary >> /tmp/input/primary/testfiles/test.txt; cowsay supplementary >> /tmp/input/supplementary/testfiles/test-supplementary.txt; cp -r /tmp/input/**/**/*.txt /tmp/output/; ls /tmp/output/"
+      - name: primary-input-blob-location
+        default: "testfiles/test.txt"
+      - name: supplementary-input-blob-location
+        default: "testfiles/test-supplementary.txt"
+      - name: output-blob-location
+        default: "output/"
+      artifacts:
+      - name: primary-input-artifact
+        path: /tmp/input/primary/{{inputs.parameters.primary-input-blob-location}}
+        optional: true
+        s3:
+          key: "{{inputs.parameters.primary-input-blob-location}}"
+        # azure:
+        #   blob: "{{inputs.parameters.primary-input-blob-location}}"
+      - name: supplementary-input-artifact
+        path: /tmp/input/supplementary/{{inputs.parameters.supplementary-input-blob-location}}
+        optional: true
+        s3:
+          key: "{{inputs.parameters.supplementary-input-blob-location}}"
+        # azure:
+        #   blob: "{{inputs.parameters.primary-input-blob-location}}"
+    container: 
+      image: docker/whalesay:latest
+      command: [sh, -c]
+      args: ["{{inputs.parameters.script-args}}"]
+    outputs:
+      artifacts:
+        - name: output-artifact
+          path: /tmp/output
+          archive:
+            none: {}
+          optional: true
+          s3:
+            key: "{{inputs.parameters.output-blob-location}}"
+          # azure:
+          #   blob: "{{inputs.parameters.output-blob-location}}"
