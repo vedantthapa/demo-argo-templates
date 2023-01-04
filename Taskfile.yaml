@@ -68,3 +68,21 @@ tasks:
     cmds:
       - kubectl delete -n argo -f https://github.com/argoproj/argo-workflows/releases/download/v3.4.4/quick-start-postgres.yaml --context=k3d-{{.CLUSTER_NAME}}
       - kubectl delete ns argo
+
+  #  _    ___      
+  # | | _( _ ) ___ 
+  # | |/ / _ \/ __|
+  # |   < (_) \__ \
+  # |_|\_\___/|___/
+
+  k8s:install:
+    prefix: ⚙️ > kubectl install
+    desc: install kubernetes manifests
+    cmds:
+      - "kubectl apply -n argo -f k8s/ --recursive --context=k3d-{{.CLUSTER_NAME}}"
+
+  k8s:delete:
+    prefix: ⚙️ > kubectl delete
+    desc: install kubernetes manifests
+    cmds:
+      - "kubectl delete -n argo -f k8s/ --recursive --context=k3d-{{.CLUSTER_NAME}}"
