@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  # If you want to use this config map by default, name it "artifact-repositories". Otherwise, you can provide a reference to a
+  # different config map in `artifactRepositoryRef.configMap`.
+  name: azure-artifact-repository
+data:
+  v1-azure-artifact-repository: |
+    archiveLogs: true
+    azure:
+      endpoint: http://storage-azurite-service:10000/devstoreaccount1
+      container: argo
+      accountKeySecret:
+        name: az-secret
+        key: accountKey
+      
