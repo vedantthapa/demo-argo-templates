@@ -22,7 +22,7 @@ spec:
         default: ""
       - name: output-blob-location
         default: ""
-      
+     
       # configure input locations for primary / supplementary artifacts
       artifacts:
       - name: primary-input-artifact
