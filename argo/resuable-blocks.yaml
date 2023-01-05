@@ -4,13 +4,15 @@ metadata:
   name: execute-script-template
   annotations:
     workflows.argoproj.io/description: |
-      This workflow template provides an general template for running a script and is capable of artifact passing.
+      This workflow template provides a general template for running a script and 
+      is capable of artifact passing using key-only artifacts.
 spec:
   entrypoint: execute-script
   templates:
   - name: execute-script
-    
+
     inputs:
+      # parameters to be passed as arguments while composing a workflow
       parameters:
       - name: script-args
         default: ""
@@ -20,6 +22,8 @@ spec:
         default: ""
       - name: output-blob-location
         default: ""
+      
+      # configure input locations for primary / supplementary artifacts
       artifacts:
       - name: primary-input-artifact
         path: /tmp/input/primary/{{inputs.parameters.primary-input-blob-location}}
@@ -31,13 +35,15 @@ spec:
         optional: true
         s3:
           key: "{{inputs.parameters.supplementary-input-blob-location}}"
-
+    
+    # script / cli program to run 
     container: 
       image: docker/whalesay:latest
       command: [sh, -c]
       args: ["{{inputs.parameters.script-args}}"]
 
     outputs:
+      # configure output location for artifacts  
       artifacts:
         - name: output-artifact
           path: /tmp/output
