@@ -9,35 +9,34 @@ spec:
   entrypoint: execute-script
   templates:
   - name: execute-script
+    
     inputs:
       parameters:
       - name: script-args
-        default: "sleep 1; mkdir /tmp/output; cowsay primary >> /tmp/input/primary/testfiles/test.txt; cowsay supplementary >> /tmp/input/supplementary/testfiles/test-supplementary.txt; cp -r /tmp/input/**/**/*.txt /tmp/output/; ls /tmp/output/"
+        default: ""
       - name: primary-input-blob-location
-        default: "testfiles/test.txt"
+        default: ""
       - name: supplementary-input-blob-location
-        default: "testfiles/test-supplementary.txt"
+        default: ""
       - name: output-blob-location
-        default: "output/"
+        default: ""
       artifacts:
       - name: primary-input-artifact
         path: /tmp/input/primary/{{inputs.parameters.primary-input-blob-location}}
         optional: true
         s3:
           key: "{{inputs.parameters.primary-input-blob-location}}"
-        # azure:
-        #   blob: "{{inputs.parameters.primary-input-blob-location}}"
       - name: supplementary-input-artifact
         path: /tmp/input/supplementary/{{inputs.parameters.supplementary-input-blob-location}}
         optional: true
         s3:
           key: "{{inputs.parameters.supplementary-input-blob-location}}"
-        # azure:
-        #   blob: "{{inputs.parameters.primary-input-blob-location}}"
+
     container: 
       image: docker/whalesay:latest
       command: [sh, -c]
       args: ["{{inputs.parameters.script-args}}"]
+
     outputs:
       artifacts:
         - name: output-artifact
@@ -47,5 +46,3 @@ spec:
           optional: true
           s3:
             key: "{{inputs.parameters.output-blob-location}}"
-          # azure:
-          #   blob: "{{inputs.parameters.output-blob-location}}"
