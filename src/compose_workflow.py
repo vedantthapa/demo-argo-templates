@@ -17,7 +17,7 @@ with Workflow("hera-demo-", service=ws, generate_name=True) as w:
             name="execute-script-template",
             template="process-git-artifacts",
         ),
-        inputs=[Parameter(name="revision", value="main")],
+        inputs=[Parameter(name="git-revision", value="main")],
     )
     d = Task("d", say, ["This is task D!"])
 
