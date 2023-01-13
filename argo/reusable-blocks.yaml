@@ -7,6 +7,8 @@ metadata:
       This workflow template provides a general template for running a script and 
       is capable of artifact passing using key-only artifacts.
 spec:
+  podGC:
+    strategy: OnPodSuccess
   entrypoint: execute-script
   templates:
   - name: execute-script
