@@ -1,14 +1,9 @@
-from hera import Task, Workflow, WorkflowService, TemplateRef, Parameter
+from hera import Parameter, Task, TemplateRef, Workflow
 
-from config import NAMESPACE, TOKEN
+from argo import MyWorkflow
 from tasks import say
 
-ws = WorkflowService(
-    host="https://localhost:2746", verify_ssl=False, token=TOKEN, namespace=NAMESPACE
-)
-
-
-with Workflow("hera-demo-", service=ws, generate_name=True) as w:
+with MyWorkflow("hera-demo-", generate_name=True) as w:
     a = Task("a", say, ["This is task A!"])
     b = Task("b", say, ["This is task B!"])
     c = Task(
